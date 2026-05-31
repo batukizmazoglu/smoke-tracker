@@ -37,9 +37,11 @@ public final class SessionRecorder {
         self.idProvider = idProvider
     }
 
-    /// Seansı başlatır. Zaten kayıttaysa hiçbir şey yapmaz.
+    /// Seansı başlatır (idle veya bitmiş bir seansın ardından).
+    /// Hâlihazırda kayıttaysa hiçbir şey yapmaz; böylece aynı örnek
+    /// gün içinde birden çok seans için yeniden kullanılabilir.
     public func start() {
-        guard state == .idle else { return }
+        guard state != .recording else { return }
         motion.startRecording()
         state = .recording
     }

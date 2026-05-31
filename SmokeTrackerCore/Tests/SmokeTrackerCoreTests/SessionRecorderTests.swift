@@ -86,4 +86,20 @@ final class MockMotionRecorder: MotionRecording {
         #expect(motion.stopCallCount == 0)
         #expect(recorder.state == .idle)
     }
+
+    @Test func canStartNewSessionAfterFinished() {
+        let motion = MockMotionRecorder()
+        let recorder = SessionRecorder(
+            motion: motion,
+            dateProvider: FixedDateProvider(makeDate(2026, 5, 31, 9, 0))
+        )
+
+        recorder.start()
+        _ = recorder.stop()
+        #expect(recorder.state == .finished)
+
+        recorder.start()
+        #expect(recorder.state == .recording)
+        #expect(motion.startCallCount == 2)
+    }
 }
