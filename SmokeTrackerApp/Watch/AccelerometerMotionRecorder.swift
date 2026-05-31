@@ -29,6 +29,14 @@ final class AccelerometerMotionRecorder: MotionRecording {
         CMSensorRecorder.isAccelerometerRecordingAvailable()
     }
 
+    /// Motion & Fitness iznini proaktif olarak ister. CMSensorRecorder'ın ayrı
+    /// bir "izin iste" API'si yoktur; sistem istemi yalnızca recordAccelerometer
+    /// ile açılır. Bu yüzden kısa, zararsız (okunmayan) bir kayıt başlatarak
+    /// soruyu öne çekeriz; izin reddedilirse kayıt zaten oluşmaz.
+    func requestAuthorization() {
+        recorder.recordAccelerometer(forDuration: 60)
+    }
+
     func startRecording() {
         startedAt = Date()
         // İlk çağrı, gerekiyorsa Motion & Fitness iznini tetikler.
