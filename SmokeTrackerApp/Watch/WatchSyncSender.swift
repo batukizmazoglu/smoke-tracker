@@ -37,4 +37,10 @@ final class WatchSyncSender: NSObject, WCSessionDelegate {
     }
 
     nonisolated func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
+
+    /// Dosya transferi bitince (başarılı ya da hatalı) yarattığımız geçici
+    /// dosyayı sil; aksi halde her seansta tmp dizini büyür.
+    nonisolated func session(_ session: WCSession, didFinish fileTransfer: WCSessionFileTransfer, error: Error?) {
+        try? FileManager.default.removeItem(at: fileTransfer.file.fileURL)
+    }
 }
