@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import WidgetKit
 import SmokeTrackerCore
 import SmokeTrackerData
 
@@ -14,6 +15,7 @@ final class WatchModel {
     private let consent: UserDefaultsConsentStore
     private let motionRecorder: AccelerometerMotionRecorder
     private let sessionRecorder: SessionRecorder
+    private let complicationThrottle = TapThrottle(minInterval: 2)
 
     var todayCount: Int = 0
     var isRecordingSession: Bool = false
@@ -22,8 +24,8 @@ final class WatchModel {
     }
 
     init() {
-        let url = URL.documentsDirectory.appendingPathComponent("watch-events.json")
-        let store = FileEventStore(url: url)
+        // Olay deposu, complication ile paylaşılan App Group konteynerinde.
+        let store = FileEventStore(url: SharedContainer.watchEventsURL())
         let consent = UserDefaultsConsentStore()
         let motionRecorder = AccelerometerMotionRecorder()
 
@@ -37,11 +39,18 @@ final class WatchModel {
         refresh()
     }
 
-    /// +1: yerelde kaydet, iPhone'a gönder, sayıyı güncelle.
+    /// +1: yerelde kaydet, iPhone'a gönder, sayıyı ve complication'ı güncelle.
     func logOne() {
         let event = quickLog.logOne()
         sender.send(event)
         refresh()
+        WidgetCenter.shared.reloadAllTimelines()
+    }
+
+    /// Complication'dan gelen +1; çok kısa aralıkta tekrarları eler.
+    func logFromComplication() {
+        guard complicationThrottle.accept(at: Date()) else { return }
+        logOne()
     }
 
     /// Sensörlü seansı başlatır (ilk kayıt Motion iznini tetikler).
@@ -71,6 +80,7 @@ final class WatchModel {
             sender.sendTrainingSession(training)
         }
         refresh()
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     func refresh() {
