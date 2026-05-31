@@ -10,7 +10,9 @@ struct SmokeTrackerWatchApp: App {
             WatchTodayView(model: model)
                 .onOpenURL { url in
                     // Complication "smoketracker://log" ile açtıysa +1 işle.
-                    if url.host == "log" { model.logFromComplication() }
+                    if url.scheme == "smoketracker", url.host(percentEncoded: false) == "log" {
+                        model.logFromComplication()
+                    }
                 }
         }
         .onChange(of: scenePhase) { _, phase in

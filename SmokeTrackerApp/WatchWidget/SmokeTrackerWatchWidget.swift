@@ -19,13 +19,15 @@ struct CountProvider: TimelineProvider {
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<CountEntry>) -> Void) {
         let entry = currentEntry()
-        // Gün dönümünde otomatik yenile (sayaç sıfırlansın).
         let nextMidnight = Calendar.current.nextDate(
             after: entry.date,
             matching: DateComponents(hour: 0, minute: 0, second: 0),
             matchingPolicy: .nextTime
         ) ?? entry.date.addingTimeInterval(60 * 60)
-        completion(Timeline(entries: [entry], policy: .after(nextMidnight)))
+        // Gece yarısına sıfır sayılı ikinci bir entry: reload'a bağlı kalmadan
+        // gün dönümünde sayaç görsel olarak sıfırlanır (policy: .after en iyi-çaba).
+        let resetEntry = CountEntry(date: nextMidnight, count: 0)
+        completion(Timeline(entries: [entry, resetEntry], policy: .after(nextMidnight)))
     }
 
     private func currentEntry() -> CountEntry {
