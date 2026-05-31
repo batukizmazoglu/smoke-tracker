@@ -29,7 +29,16 @@ public final class FileEventStore: EventStoring {
 
     private func persist() {
         guard let data = try? JSONEncoder().encode(events) else { return }
-        try? data.write(to: url, options: .atomic)
+        do {
+            try data.write(to: url, options: .atomic)
+        } catch {
+            // Watch yereli yetkili kaynak değildir (olay zaten iPhone'a
+            // transferUserInfo ile gönderilir), ama yazma hatasını sessizce
+            // yutmayalım; yalnızca yerel görüntü sürekliliği etkilenir.
+            #if DEBUG
+            print("[FileEventStore] persist başarısız: \(error)")
+            #endif
+        }
     }
 
     private static func load(from url: URL) -> [SmokingEvent] {

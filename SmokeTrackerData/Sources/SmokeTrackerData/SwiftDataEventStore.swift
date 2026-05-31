@@ -41,6 +41,10 @@ public final class SwiftDataEventStore: EventStoring {
     }
 
     public func add(_ event: SmokingEvent) {
+        // İki katmanlı tekilleştirme: açık `contains` kontrolü (save-time
+        // birleştirme davranışına güvenmemek için) + modeldeki
+        // @Attribute(.unique) güvenlik ağı. Aynı id = aynı mantıksal olay,
+        // dolayısıyla tekrarın elenmesi veri kaybı değil doğru davranıştır.
         guard !contains(id: event.id) else { return }
         let record = SmokingEventRecord(
             id: event.id,
