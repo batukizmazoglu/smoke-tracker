@@ -8,6 +8,10 @@ import SmokeTrackerData
 /// WatchModel'den kullanılır.
 @MainActor
 final class WatchSyncSender: NSObject, WCSessionDelegate {
+    /// iPhone'dan applicationContext ile gelen onay değişimini WatchModel'e
+    /// iletir. WatchModel init'te atar.
+    var onConsentChange: ((Bool) -> Void)?
+
     override init() {
         super.init()
         guard WCSession.isSupported() else { return }
@@ -36,7 +40,24 @@ final class WatchSyncSender: NSObject, WCSessionDelegate {
         }
     }
 
+    /// Yerel onay değişimini iPhone'a taşır. applicationContext son durumu tutar;
+    /// karşı taraf uyandığında teslim alır (latest-wins).
+    func syncConsent(_ on: Bool) {
+        guard WCSession.isSupported() else { return }
+        try? WCSession.default.updateApplicationContext(
+            ConsentSyncCodec.encode(trainingDataConsent: on)
+        )
+    }
+
     nonisolated func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
+
+    /// iPhone'dan gelen onay durumunu çöz ve MainActor'da WatchModel'e ilet.
+    nonisolated func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {
+        guard let value = ConsentSyncCodec.decode(applicationContext) else { return }
+        Task { @MainActor in
+            self.onConsentChange?(value)
+        }
+    }
 
     /// Dosya transferi bitince (başarılı ya da hatalı) yarattığımız geçici
     /// dosyayı sil; aksi halde her seansta tmp dizini büyür.

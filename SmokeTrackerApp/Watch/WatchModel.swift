@@ -16,11 +16,16 @@ final class WatchModel {
     private let motionRecorder: AccelerometerMotionRecorder
     private let sessionRecorder: SessionRecorder
     private let complicationThrottle = TapThrottle(minInterval: 2)
+    private var suppressConsentBroadcast = true   // init sırasında yayını bastır
 
     var todayCount: Int = 0
     var isRecordingSession: Bool = false
     var trainingDataConsent: Bool {
-        didSet { consent.trainingDataConsent = trainingDataConsent }
+        didSet {
+            consent.trainingDataConsent = trainingDataConsent
+            guard !suppressConsentBroadcast else { return }
+            sender.syncConsent(trainingDataConsent)
+        }
     }
 
     init() {
@@ -36,7 +41,19 @@ final class WatchModel {
         self.motionRecorder = motionRecorder
         self.sessionRecorder = SessionRecorder(motion: motionRecorder, dateProvider: SystemDateProvider())
         self.trainingDataConsent = consent.trainingDataConsent
+        self.sender.onConsentChange = { [weak self] value in
+            self?.applyRemoteConsent(value)
+        }
         refresh()
+        suppressConsentBroadcast = false
+    }
+
+    /// iPhone'dan gelen onayı yerelde uygular; yeniden yayın yapmaz (döngü yok).
+    func applyRemoteConsent(_ value: Bool) {
+        guard value != trainingDataConsent else { return }
+        suppressConsentBroadcast = true
+        trainingDataConsent = value   // store'a yazılır, tekrar yayınlanmaz
+        suppressConsentBroadcast = false
     }
 
     /// +1: yerelde kaydet, iPhone'a gönder, sayıyı ve complication'ı güncelle.
