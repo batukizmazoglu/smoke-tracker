@@ -1,0 +1,47 @@
+name: SmokeTracker
+options:
+  bundleIdPrefix: com.oero.smoketracker
+  deploymentTarget:
+    iOS: "17.0"
+    watchOS: "10.0"
+  createIntermediateGroups: true
+packages:
+  SmokeTrackerCore:
+    path: ../SmokeTrackerCore
+  SmokeTrackerData:
+    path: ../SmokeTrackerData
+settings:
+  base:
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "6.0"
+    GENERATE_INFOPLIST_FILE: "NO"
+targets:
+  SmokeTracker:
+    type: application
+    platform: iOS
+    sources:
+      - path: iOS
+    dependencies:
+      - package: SmokeTrackerCore
+      - package: SmokeTrackerData
+      - target: SmokeTrackerWatch
+        embed: true
+    settings:
+      base:
+        INFOPLIST_FILE: iOS/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.oero.smoketracker
+        TARGETED_DEVICE_FAMILY: "1"
+  SmokeTrackerWatch:
+    type: application
+    platform: watchOS
+    sources:
+      - path: Watch
+    dependencies:
+      - package: SmokeTrackerCore
+      - package: SmokeTrackerData
+    settings:
+      base:
+        INFOPLIST_FILE: Watch/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.oero.smoketracker.watchkitapp
+        TARGETED_DEVICE_FAMILY: "4"
