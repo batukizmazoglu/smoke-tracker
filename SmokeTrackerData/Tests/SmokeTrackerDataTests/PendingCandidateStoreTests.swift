@@ -37,4 +37,11 @@ import SmokeTrackerCore
         store.save(c); store.save(c)
         #expect(store.all().count == 1)
     }
+
+    @Test func persistsAcrossInstances() {
+        let url = tempURL()
+        let c = makeCandidate()
+        PendingCandidateStore(url: url).save(c)
+        #expect(PendingCandidateStore(url: url).all() == [c])
+    }
 }

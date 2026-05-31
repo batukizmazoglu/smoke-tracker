@@ -6,7 +6,9 @@ import SmokeTrackerCore
 /// ayrı uyanmalarda tutarlı çalışır. Best-effort (yazma hatasını yutmaz ama
 /// fırlatmaz).
 ///
-/// NOT: Tek bir aktörden (uygulamada MainActor) kullanılmalıdır.
+/// NOT: Stateless olduğu için aynı dosyaya eşzamanlı yazan birden fazla
+/// süreç/uzantı yarış durumu (race) yaratabilir; tek bir süreçten/aktörden
+/// (uygulamada MainActor) kullanılmalıdır.
 public final class PendingCandidateStore: PendingCandidateStoring {
     private let url: URL
 
