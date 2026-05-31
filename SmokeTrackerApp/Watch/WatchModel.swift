@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import UserNotifications
 import WidgetKit
 import SmokeTrackerCore
 import SmokeTrackerData
@@ -16,6 +17,8 @@ final class WatchModel {
     private let motionRecorder: AccelerometerMotionRecorder
     private let sessionRecorder: SessionRecorder
     private let complicationThrottle = TapThrottle(minInterval: 2)
+    private let pendingStore = PendingCandidateStore(url: SharedContainer.pendingCandidatesURL())
+    private let notificationCoordinator = NotificationCoordinator()
     private var suppressConsentBroadcast = true   // init sırasında yayını bastır
 
     var todayCount: Int = 0
@@ -47,6 +50,13 @@ final class WatchModel {
             self?.applyRemoteConsent(value)
         }
         self.sender.activate()   // callback bağlandıktan sonra etkinleştir
+        // Bildirim onay kablajı.
+        SmokeNotificationScheduler.registerCategory()
+        SmokeNotificationScheduler.requestAuthorization()
+        notificationCoordinator.onConfirm = { [weak self] id, result in
+            self?.confirmCandidate(id: id, result: result)
+        }
+        UNUserNotificationCenter.current().delegate = notificationCoordinator
         refresh()
         suppressConsentBroadcast = false
     }
@@ -115,6 +125,24 @@ final class WatchModel {
     func requestMotionPermission() {
         motionRecorder.requestAuthorization()
         refreshMotionStatus()
+    }
+
+    /// Bildirim onayını işler: Evet → +1 olay (autoConfirmed) + pozitif eğitim
+    /// verisi; Hayır → yalnızca negatif eğitim verisi. Her ikisi de izinle.
+    func confirmCandidate(id: UUID, result: ConfirmationResult) {
+        guard let candidate = pendingStore.all().first(where: { $0.id == id }) else { return }
+        let outcome = ConfirmationFlow.outcome(for: candidate, result: result,
+                                               eventID: UUID(), trainingID: UUID())
+        if let event = outcome.event {
+            store.add(event)
+            sender.send(event)
+        }
+        if trainingDataConsent {
+            sender.sendTrainingSession(outcome.training)
+        }
+        pendingStore.remove(id: id)
+        refresh()
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     func refresh() {
