@@ -3,8 +3,9 @@ import WatchConnectivity
 import SmokeTrackerCore
 import SmokeTrackerData
 
-/// Yeni olayları WCSession ile iPhone'a güvenilir biçimde aktarır.
-/// Yalnızca MainActor'daki WatchModel'den kullanılır.
+/// Yeni olayları ve (izinle) eğitim verisini WCSession ile iPhone'a aktarır.
+/// Watch tarafındaki tek WCSession delegate'i; yalnızca MainActor'daki
+/// WatchModel'den kullanılır.
 @MainActor
 final class WatchSyncSender: NSObject, WCSessionDelegate {
     override init() {
@@ -18,6 +19,21 @@ final class WatchSyncSender: NSObject, WCSessionDelegate {
     func send(_ event: SmokingEvent) {
         guard let data = try? SyncMessageCodec.encode([event]) else { return }
         WCSession.default.transferUserInfo(["payload": data])
+    }
+
+    /// Ham eğitim verisini dosya olarak gönderir (boyut büyük olabilir).
+    func sendTrainingSession(_ session: TrainingSession) {
+        guard let data = try? TrainingSessionCodec.encode(session) else { return }
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("training-\(session.id.uuidString).json")
+        do {
+            try data.write(to: url, options: .atomic)
+            WCSession.default.transferFile(url, metadata: ["type": "trainingSession"])
+        } catch {
+            #if DEBUG
+            print("[WatchSyncSender] eğitim verisi yazılamadı: \(error)")
+            #endif
+        }
     }
 
     nonisolated func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
