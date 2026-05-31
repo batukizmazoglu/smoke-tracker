@@ -12,4 +12,10 @@ public enum SharedContainer {
             ?? URL.documentsDirectory
         return base.appendingPathComponent("watch-events.json")
     }
+
+    public static func pendingCandidatesURL(appGroup: String = watchAppGroup) -> URL {
+        let base = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroup)
+            ?? URL.documentsDirectory
+        return base.appendingPathComponent("pending-candidates.json")
+    }
 }
