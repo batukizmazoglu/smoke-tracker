@@ -14,6 +14,7 @@ final class PhoneModel {
     let archive: FileTrainingDataArchive
     private let consent = UserDefaultsConsentStore()
     private let onboardingStore = UserDefaultsOnboardingStore()
+    private var suppressConsentBroadcast = true   // init sırasında yayını bastır
     private let stats = StatsEngine(calendar: .current)
     private var receiver: PhoneSyncReceiver?
 
@@ -22,7 +23,11 @@ final class PhoneModel {
     var history: [SmokingEvent] = []
     var trainingSessions: [TrainingSession] = []
     var trainingDataConsent: Bool {
-        didSet { consent.trainingDataConsent = trainingDataConsent }
+        didSet {
+            consent.trainingDataConsent = trainingDataConsent
+            guard !suppressConsentBroadcast else { return }
+            receiver?.syncConsent(trainingDataConsent)
+        }
     }
     var hasCompletedOnboarding: Bool
 
@@ -44,9 +49,25 @@ final class PhoneModel {
         self.trainingDataConsent = consent.trainingDataConsent
         self.hasCompletedOnboarding = onboardingStore.hasCompletedOnboarding
         refresh()
-        self.receiver = PhoneSyncReceiver(coordinator: coordinator, archive: archive) { [weak self] in
-            self?.refresh()
-        }
+        self.receiver = PhoneSyncReceiver(
+            coordinator: coordinator,
+            archive: archive,
+            onConsentChange: { [weak self] value in
+                self?.applyRemoteConsent(value)
+            },
+            onChange: { [weak self] in
+                self?.refresh()
+            }
+        )
+        suppressConsentBroadcast = false
+    }
+
+    /// Watch'tan gelen onayı yerelde uygular; yeniden yayın yapmaz (döngü yok).
+    func applyRemoteConsent(_ value: Bool) {
+        guard value != trainingDataConsent else { return }
+        suppressConsentBroadcast = true
+        trainingDataConsent = value
+        suppressConsentBroadcast = false
     }
 
     func refresh() {
