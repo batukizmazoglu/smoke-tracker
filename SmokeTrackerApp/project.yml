@@ -40,8 +40,25 @@ targets:
     dependencies:
       - package: SmokeTrackerCore
       - package: SmokeTrackerData
+      - target: SmokeTrackerWatchWidget
+        embed: true
     settings:
       base:
         INFOPLIST_FILE: Watch/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.oero.smoketracker.watchkitapp
         TARGETED_DEVICE_FAMILY: "4"
+        CODE_SIGN_ENTITLEMENTS: Watch/SmokeTrackerWatch.entitlements
+  SmokeTrackerWatchWidget:
+    type: app-extension
+    platform: watchOS
+    sources:
+      - path: WatchWidget
+    dependencies:
+      - package: SmokeTrackerCore
+      - package: SmokeTrackerData
+    settings:
+      base:
+        INFOPLIST_FILE: WatchWidget/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.oero.smoketracker.watchkitapp.widget
+        TARGETED_DEVICE_FAMILY: "4"
+        CODE_SIGN_ENTITLEMENTS: WatchWidget/SmokeTrackerWatchWidget.entitlements
