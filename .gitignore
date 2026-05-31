@@ -1,3 +1,4 @@
 SmokeTrackerApp/*.xcodeproj
 .DS_Store
 DerivedData/
+build/
