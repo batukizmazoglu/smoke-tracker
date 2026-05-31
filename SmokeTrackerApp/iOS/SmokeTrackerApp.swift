@@ -7,7 +7,11 @@ struct SmokeTrackerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            TodayView(model: model)
+            if model.hasCompletedOnboarding {
+                TodayView(model: model)
+            } else {
+                OnboardingView(model: model)
+            }
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { model.refresh() }
