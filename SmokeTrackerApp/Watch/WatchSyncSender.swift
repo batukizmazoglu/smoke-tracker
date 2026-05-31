@@ -16,6 +16,13 @@ final class WatchSyncSender: NSObject, WCSessionDelegate {
         super.init()
         guard WCSession.isSupported() else { return }
         WCSession.default.delegate = self
+    }
+
+    /// WCSession'ı etkinleştirir. `onConsentChange` gibi callback'ler
+    /// bağlandıktan SONRA çağrılmalı; aksi halde aktivasyon anında teslim
+    /// edilebilen ilk applicationContext (onay durumu) kaçabilir.
+    func activate() {
+        guard WCSession.isSupported() else { return }
         WCSession.default.activate()
     }
 
