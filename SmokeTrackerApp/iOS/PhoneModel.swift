@@ -13,6 +13,7 @@ final class PhoneModel {
     let coordinator: SyncCoordinator
     let archive: FileTrainingDataArchive
     private let consent = UserDefaultsConsentStore()
+    private let onboardingStore = UserDefaultsOnboardingStore()
     private let stats = StatsEngine(calendar: .current)
     private var receiver: PhoneSyncReceiver?
 
@@ -23,6 +24,7 @@ final class PhoneModel {
     var trainingDataConsent: Bool {
         didSet { consent.trainingDataConsent = trainingDataConsent }
     }
+    var hasCompletedOnboarding: Bool
 
     init() {
         let container: ModelContainer
@@ -40,6 +42,7 @@ final class PhoneModel {
         self.coordinator = SyncCoordinator(store: store)
         self.archive = archive
         self.trainingDataConsent = consent.trainingDataConsent
+        self.hasCompletedOnboarding = onboardingStore.hasCompletedOnboarding
         refresh()
         self.receiver = PhoneSyncReceiver(coordinator: coordinator, archive: archive) { [weak self] in
             self?.refresh()
@@ -62,5 +65,11 @@ final class PhoneModel {
     func deleteAllTrainingData() {
         try? archive.deleteAll()
         refresh()
+    }
+
+    /// Onboarding'i tamamlandı olarak işaretler; kök ekran TodayView'a geçer.
+    func completeOnboarding() {
+        onboardingStore.hasCompletedOnboarding = true
+        hasCompletedOnboarding = true
     }
 }
