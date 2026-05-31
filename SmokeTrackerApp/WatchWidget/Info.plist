@@ -14,20 +14,10 @@
     <string>$(CURRENT_PROJECT_VERSION)</string>
     <key>CFBundlePackageType</key>
     <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
-    <key>WKApplication</key>
-    <true/>
-    <key>WKCompanionAppBundleIdentifier</key>
-    <string>com.oero.smoketracker</string>
-    <key>NSMotionUsageDescription</key>
-    <string>Sensörlü seans sırasında bilek hareketini kaydederek ileride sigara içme hareketini otomatik tanımak için kullanılır. Yalnızca açık izninle toplanır.</string>
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>smoketracker</string>
-            </array>
-        </dict>
-    </array>
+    <key>NSExtension</key>
+    <dict>
+        <key>NSExtensionPointIdentifier</key>
+        <string>com.apple.widgetkit-extension</string>
+    </dict>
 </dict>
 </plist>
