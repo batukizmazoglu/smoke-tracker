@@ -12,7 +12,7 @@ public struct DailyCount: Equatable, Sendable {
 }
 
 /// Olay listesinden günlük/haftalık sayımlar üreten saf hesaplayıcı.
-public struct StatsEngine {
+public struct StatsEngine: Sendable {
     private let calendar: Calendar
 
     public init(calendar: Calendar) {
@@ -33,8 +33,12 @@ public struct StatsEngine {
     }
 
     /// Verilen tarihin içinde bulunduğu haftanın toplam sayısı.
+    /// Aralık yarı-açıktır `[start, end)`: hafta bitiş anı (sonraki haftanın
+    /// başlangıcı) hariç tutulur, böylece her olay tek bir haftaya ait olur.
+    /// (Not: `DateInterval.contains` her iki ucu da dahil ettiğinden burada
+    /// kullanılmaz; aksi halde sınır anı iki haftada birden sayılırdı.)
     public func countInWeek(containing date: Date, events: [SmokingEvent]) -> Int {
         guard let interval = calendar.dateInterval(of: .weekOfYear, for: date) else { return 0 }
-        return events.filter { interval.contains($0.timestamp) }.count
+        return events.filter { $0.timestamp >= interval.start && $0.timestamp < interval.end }.count
     }
 }

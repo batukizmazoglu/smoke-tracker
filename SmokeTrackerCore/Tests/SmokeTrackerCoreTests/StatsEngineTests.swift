@@ -54,4 +54,17 @@ import Foundation
         #expect(engine.count(on: makeDate(2026, 5, 31), events: []) == 0)
         #expect(engine.dailyCounts(events: []).isEmpty)
     }
+
+    @Test func countInWeekExcludesExactWeekEndBoundary() {
+        let engine = StatsEngine(calendar: makeCalendar())
+        // Pazartesi 2026-06-01 00:00 (Istanbul) = sonraki haftanın başlangıcı,
+        // yarı-açık hafta aralığının dışında kalmalı.
+        let boundary = makeDate(2026, 6, 1, 0, 0)
+        let events = [
+            event(makeDate(2026, 5, 31, 23, 59)), // bu hafta
+            event(boundary),                       // sonraki hafta (hariç)
+        ]
+        let count = engine.countInWeek(containing: makeDate(2026, 5, 27, 12, 0), events: events)
+        #expect(count == 1)
+    }
 }

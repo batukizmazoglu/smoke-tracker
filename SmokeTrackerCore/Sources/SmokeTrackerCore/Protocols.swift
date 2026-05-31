@@ -13,6 +13,12 @@ public struct SystemDateProvider: DateProviding {
 
 /// Sigara olaylarının kalıcı deposu için soyutlama.
 /// Plan 2'de SwiftData ile gerçeklenecek.
+///
+/// Sözleşme: `add(_:)` ile eklenen bir olay, aynı senkron bağlamda hemen
+/// ardından çağrılan `contains(id:)` tarafından görülebilir olmalıdır.
+/// Yazımları tamponlayan (ör. işlem/transaction kullanan) gerçeklemeler
+/// `add(_:)` dönmeden önce bunu yansıtmalıdır; aksi halde `SyncCoordinator`
+/// aynı toplu istek içindeki tekrarları eleyemez.
 public protocol EventStoring {
     func allEvents() -> [SmokingEvent]
     func add(_ event: SmokingEvent)

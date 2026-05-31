@@ -1,6 +1,11 @@
 import Foundation
 
 /// Tek dokunuşla anında +1 kaydı oluşturur (kaynak: .tap).
+///
+/// Bu sınıf Watch tarafındaki tek yazardır; `SyncCoordinator` ise iPhone
+/// tarafındaki tek yazardır. Her ikisi benzersiz `id` ürettiğinden çakışmaz.
+/// Aynı dokunuşun iki kez kaydedilmesini önlemek (debounce) UI katmanının
+/// sorumluluğundadır (bkz. complication, Plan 3).
 public final class QuickLogManager {
     private let store: EventStoring
     private let dateProvider: DateProviding
