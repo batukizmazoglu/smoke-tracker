@@ -20,6 +20,7 @@ final class WatchModel {
 
     var todayCount: Int = 0
     var isRecordingSession: Bool = false
+    var motionStatus: MotionPermissionStatus = .notDetermined
     var trainingDataConsent: Bool {
         didSet {
             consent.trainingDataConsent = trainingDataConsent
@@ -40,6 +41,7 @@ final class WatchModel {
         self.consent = consent
         self.motionRecorder = motionRecorder
         self.sessionRecorder = SessionRecorder(motion: motionRecorder, dateProvider: SystemDateProvider())
+        self.motionStatus = WatchMotionAuthorizer.status
         self.trainingDataConsent = consent.trainingDataConsent
         self.sender.onConsentChange = { [weak self] value in
             self?.applyRemoteConsent(value)
@@ -70,8 +72,11 @@ final class WatchModel {
         logOne()
     }
 
-    /// Sensörlü seansı başlatır (ilk kayıt Motion iznini tetikler).
+    /// Sensörlü seansı başlatır (ilk kayıt Motion iznini tetikler). İzin kalıcı
+    /// kapalıysa seans açılmaz; +1 yine de çalışır.
     func startSession() {
+        motionStatus = WatchMotionAuthorizer.status
+        guard SessionAvailability.canStartSession(motion: motionStatus) else { return }
         sessionRecorder.start()
         isRecordingSession = true
     }
@@ -98,6 +103,17 @@ final class WatchModel {
         }
         refresh()
         WidgetCenter.shared.reloadAllTimelines()
+    }
+
+    /// Motion izin durumunu güncel CMSensorRecorder yetkisinden tazeler.
+    func refreshMotionStatus() {
+        motionStatus = WatchMotionAuthorizer.status
+    }
+
+    /// Kullanıcı isteğiyle Motion iznini proaktif tetikler, sonra durumu tazeler.
+    func requestMotionPermission() {
+        motionRecorder.requestAuthorization()
+        refreshMotionStatus()
     }
 
     func refresh() {
