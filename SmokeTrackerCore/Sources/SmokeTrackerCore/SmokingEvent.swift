@@ -2,8 +2,9 @@ import Foundation
 
 /// Tek bir sigara/IQOS olayının kaynağı.
 public enum EventSource: String, Codable, Sendable, Equatable {
-    case tap        // tek dokunuşla manuel kayıt
-    case session    // sensörlü seanstan üretildi
+    case tap            // tek dokunuşla manuel kayıt
+    case session        // sensörlü seanstan üretildi
+    case autoConfirmed  // arka plan tespitinden onaylandı (Faz 2.1)
 }
 
 /// Tek bir sigara/IQOS olayı (1 olay = 1 çubuk).
