@@ -6,10 +6,10 @@ import SmokeTrackerData
 /// "Sigara içtin mi?" onay bildirimini kurar ve (bütçe izniyle) gönderir.
 @MainActor
 enum SmokeNotificationScheduler {
-    static let categoryID = "SMOKE_CONFIRM"
-    static let yesAction = "SMOKE_YES"
-    static let noAction = "SMOKE_NO"
-    static let candidateKey = "candidateID"
+    nonisolated static let categoryID = "SMOKE_CONFIRM"
+    nonisolated static let yesAction = "SMOKE_YES"
+    nonisolated static let noAction = "SMOKE_NO"
+    nonisolated static let candidateKey = "candidateID"
 
     /// Evet/Hayır aksiyonlu kategoriyi kaydeder (açılışta bir kez).
     static func registerCategory() {
