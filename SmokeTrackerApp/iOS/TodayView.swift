@@ -20,6 +20,11 @@ struct TodayView: View {
                     Label("Geçmiş", systemImage: "list.bullet")
                 }
                 .padding(.top, 8)
+                NavigationLink {
+                    TrainingDataView(model: model)
+                } label: {
+                    Label("Eğitim verisi", systemImage: "waveform.path.ecg")
+                }
             }
             .padding()
             .navigationTitle("Sigara Takip")
