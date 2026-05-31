@@ -46,6 +46,7 @@ final class WatchModel {
         self.sender.onConsentChange = { [weak self] value in
             self?.applyRemoteConsent(value)
         }
+        self.sender.activate()   // callback bağlandıktan sonra etkinleştir
         refresh()
         suppressConsentBroadcast = false
     }
