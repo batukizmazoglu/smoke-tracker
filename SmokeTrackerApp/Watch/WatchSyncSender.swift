@@ -4,6 +4,8 @@ import SmokeTrackerCore
 import SmokeTrackerData
 
 /// Yeni olayları WCSession ile iPhone'a güvenilir biçimde aktarır.
+/// Yalnızca MainActor'daki WatchModel'den kullanılır.
+@MainActor
 final class WatchSyncSender: NSObject, WCSessionDelegate {
     override init() {
         super.init()
@@ -18,5 +20,5 @@ final class WatchSyncSender: NSObject, WCSessionDelegate {
         WCSession.default.transferUserInfo(["payload": data])
     }
 
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
+    nonisolated func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
 }

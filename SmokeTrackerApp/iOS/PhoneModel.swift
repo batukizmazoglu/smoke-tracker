@@ -18,7 +18,15 @@ final class PhoneModel {
     var history: [SmokingEvent] = []
 
     init() {
-        let container = try! EventStoreFactory.makePersistentContainer()
+        let container: ModelContainer
+        do {
+            container = try EventStoreFactory.makePersistentContainer()
+        } catch {
+            // Kalıcı depo bozuksa (ör. yarım kalmış yazma) uygulama açılışta
+            // çökmesin diye bellek-içi depoya düş. Plan 3'te kullanıcıya
+            // "veri kullanılamıyor" uyarısı gösterilecek.
+            container = try! EventStoreFactory.makeInMemoryContainer()
+        }
         let store = SwiftDataEventStore(context: ModelContext(container))
         self.store = store
         self.coordinator = SyncCoordinator(store: store)
