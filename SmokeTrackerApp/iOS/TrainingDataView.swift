@@ -13,6 +13,16 @@ struct TrainingDataView: View {
                     .foregroundStyle(.secondary)
             }
 
+            Section("Toplanan veri") {
+                let positive = model.trainingSessions.filter { $0.label == TrainingLabel.smoking }.count
+                let negative = model.trainingSessions.filter { $0.label == TrainingLabel.notSmoking }.count
+                LabeledContent("Sigara (pozitif)", value: "\(positive)")
+                LabeledContent("Sigara değil (negatif)", value: "\(negative)")
+                Text("Dengeli pozitif + negatif örnek, ileride otomatik tanıma modelini eğitmek için gerekli.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             Section("Kayıtlı seanslar (\(model.trainingSessions.count))") {
                 if model.trainingSessions.isEmpty {
                     Text("Henüz kayıt yok")
