@@ -1,6 +1,6 @@
 name: SmokeTracker
 options:
-  bundleIdPrefix: com.oero.smoketracker
+  bundleIdPrefix: com.batu.smoketracker
   deploymentTarget:
     iOS: "17.0"
     watchOS: "10.0"
@@ -16,6 +16,8 @@ settings:
     CURRENT_PROJECT_VERSION: "1"
     SWIFT_VERSION: "6.0"
     GENERATE_INFOPLIST_FILE: "NO"
+    DEVELOPMENT_TEAM: "2TZUBV6WZU"
+    CODE_SIGN_STYLE: Automatic
 targets:
   SmokeTracker:
     type: application
@@ -30,7 +32,7 @@ targets:
     settings:
       base:
         INFOPLIST_FILE: iOS/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: com.oero.smoketracker
+        PRODUCT_BUNDLE_IDENTIFIER: com.batu.smoketracker
         TARGETED_DEVICE_FAMILY: "1"
   SmokeTrackerWatch:
     type: application
@@ -45,7 +47,7 @@ targets:
     settings:
       base:
         INFOPLIST_FILE: Watch/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: com.oero.smoketracker.watchkitapp
+        PRODUCT_BUNDLE_IDENTIFIER: com.batu.smoketracker.watchkitapp
         TARGETED_DEVICE_FAMILY: "4"
         CODE_SIGN_ENTITLEMENTS: Watch/SmokeTrackerWatch.entitlements
   SmokeTrackerWatchWidget:
@@ -59,6 +61,6 @@ targets:
     settings:
       base:
         INFOPLIST_FILE: WatchWidget/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: com.oero.smoketracker.watchkitapp.widget
+        PRODUCT_BUNDLE_IDENTIFIER: com.batu.smoketracker.watchkitapp.widget
         TARGETED_DEVICE_FAMILY: "4"
         CODE_SIGN_ENTITLEMENTS: WatchWidget/SmokeTrackerWatchWidget.entitlements
