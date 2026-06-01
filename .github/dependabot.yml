@@ -1,0 +1,10 @@
+version: 2
+updates:
+  # GitHub Actions sürümlerini güncel tut (bu, checkout@v4 Node.js 20 olayını
+  # da otomatik yakalardı).
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci
