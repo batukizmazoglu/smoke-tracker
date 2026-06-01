@@ -1,0 +1,21 @@
+name: Release Drafter
+
+# Yalnızca main'e push'ta çalışır: release-drafter config'i default branch'ten
+# okur, bu yüzden PR branch'lerinde anlamlı koşamaz.
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  update_release_draft:
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: release-drafter/release-drafter@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

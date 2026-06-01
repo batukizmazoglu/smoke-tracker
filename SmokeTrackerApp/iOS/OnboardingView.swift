@@ -63,7 +63,9 @@ struct OnboardingView: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Gizlilik ve onay")
                 .font(.title.bold())
-            Text("Sensörlü seanslardaki ham hareket verisi, ileride sigara içme hareketini otomatik tanımak için kullanılabilir. Bu tamamen opsiyoneldir ve yalnızca açık iznine bağlıdır; istediğin an silebilirsin.")
+            Text("Sensörlü seanslardaki ham hareket verisi, ileride sigara içme hareketini " +
+                 "otomatik tanımak için kullanılabilir. Bu tamamen opsiyoneldir ve yalnızca " +
+                 "açık iznine bağlıdır; istediğin an silebilirsin.")
                 .foregroundStyle(.secondary)
             Toggle("Eğitim verisi toplamaya izin ver", isOn: $model.trainingDataConsent)
             Spacer()

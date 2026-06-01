@@ -17,5 +17,8 @@ Package.resolved
 # macOS
 .DS_Store
 
+# Local agent worktrees & tooling (not part of the project)
+.claude/
+
 # Misc
 *.log
