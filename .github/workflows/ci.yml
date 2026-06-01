@@ -63,18 +63,19 @@ jobs:
         working-directory: SmokeTrackerApp
         run: xcodegen generate
 
-      # `-jobs 1` derlemeyi serileştirir: SmokeTrackerCore'un modülü,
-      # SmokeTrackerData (ve watch/widget) ondan önce derlenmeye başlamadan
-      # hazır olur — aksi halde paralel build'de "no such module" yarışı oluşur.
+      # Birleşik SYMROOT/OBJROOT şart: aksi halde her SPM paketi kendi build/
+      # dizinine derlenir ve SmokeTrackerData, SmokeTrackerCore'un modülünü
+      # bulamaz ("no such module"). Tek çıktı dizini → paylaşılan modüller.
       - name: Build app + watch + widget (no code signing)
         working-directory: SmokeTrackerApp
-        run: >
-          xcodebuild
-          -project SmokeTracker.xcodeproj
-          -target SmokeTracker
-          -configuration Debug
-          -arch arm64
-          -jobs 1
-          CODE_SIGNING_ALLOWED=NO
-          SWIFT_ENABLE_EXPLICIT_MODULES=NO
-          build
+        run: |
+          xcodebuild \
+            -project SmokeTracker.xcodeproj \
+            -target SmokeTracker \
+            -configuration Debug \
+            -arch arm64 \
+            CODE_SIGNING_ALLOWED=NO \
+            SWIFT_ENABLE_EXPLICIT_MODULES=NO \
+            SYMROOT="$RUNNER_TEMP/build/sym" \
+            OBJROOT="$RUNNER_TEMP/build/obj" \
+            build
