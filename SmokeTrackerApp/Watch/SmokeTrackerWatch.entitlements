@@ -4,7 +4,7 @@
 <dict>
     <key>com.apple.security.application-groups</key>
     <array>
-        <string>group.com.oero.smoketracker</string>
+        <string>group.com.batu.smoketracker</string>
     </array>
 </dict>
 </plist>

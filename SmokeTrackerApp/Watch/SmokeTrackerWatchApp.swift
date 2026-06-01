@@ -6,7 +6,7 @@ struct SmokeTrackerWatchApp: App {
     @State private var model = WatchModel()
     @Environment(\.scenePhase) private var scenePhase
 
-    static let refreshID = "com.oero.smoketracker.detect"
+    static let refreshID = "com.batu.smoketracker.detect"
 
     var body: some Scene {
         WindowGroup {

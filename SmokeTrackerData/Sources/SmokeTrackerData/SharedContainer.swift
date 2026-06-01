@@ -5,7 +5,7 @@ import Foundation
 /// (imzasız geliştirme veya test) Documents'a güvenli biçimde düşer.
 public enum SharedContainer {
     /// Watch app'i ve complication'ın paylaştığı App Group kimliği.
-    public static let watchAppGroup = "group.com.oero.smoketracker"
+    public static let watchAppGroup = "group.com.batu.smoketracker"
 
     public static func watchEventsURL(appGroup: String = watchAppGroup) -> URL {
         let base = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroup)
