@@ -37,7 +37,11 @@ final class PhoneModel {
             container = try EventStoreFactory.makePersistentContainer()
         } catch {
             // Kalıcı depo bozuksa uygulama açılışta çökmesin diye bellek-içine düş.
-            container = try! EventStoreFactory.makeInMemoryContainer()
+            do {
+                container = try EventStoreFactory.makeInMemoryContainer()
+            } catch {
+                fatalError("Bellek-içi ModelContainer oluşturulamadı: \(error)")
+            }
         }
         let store = SwiftDataEventStore(context: ModelContext(container))
         let archiveDir = URL.documentsDirectory.appendingPathComponent("training", isDirectory: true)
