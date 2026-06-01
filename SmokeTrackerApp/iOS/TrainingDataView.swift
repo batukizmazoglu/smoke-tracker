@@ -8,7 +8,8 @@ struct TrainingDataView: View {
         List {
             Section {
                 Toggle("Eğitim verisi toplamaya izin ver", isOn: $model.trainingDataConsent)
-                Text("Sensörlü seanslardaki ham hareket verisi, ileride sigara içme hareketini otomatik tanımak için kullanılacak. Yalnızca açık izninle saklanır; istediğin an silebilirsin.")
+                Text("Sensörlü seanslardaki ham hareket verisi, ileride sigara içme hareketini " +
+                     "otomatik tanımak için kullanılacak. Yalnızca açık izninle saklanır; istediğin an silebilirsin.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

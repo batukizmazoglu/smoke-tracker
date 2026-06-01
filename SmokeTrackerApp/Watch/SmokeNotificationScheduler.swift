@@ -27,9 +27,11 @@ enum SmokeNotificationScheduler {
 
     /// Bütçe izin veriyorsa aday için onay bildirimi planlar; gönderirse true.
     @discardableResult
-    static func notifyIfAllowed(for candidate: PendingCandidate,
-                               budgetStore: NotificationBudgetStore,
-                               config: BudgetConfig = BudgetConfig()) -> Bool {
+    static func notifyIfAllowed(
+        for candidate: PendingCandidate,
+        budgetStore: NotificationBudgetStore,
+        config: BudgetConfig = BudgetConfig()
+    ) -> Bool {
         let hour = Calendar.current.component(.hour, from: candidate.detectedAt)
         guard NotificationBudget.canNotify(sentToday: budgetStore.sentToday(),
                                            hour: hour, config: config) else { return false }

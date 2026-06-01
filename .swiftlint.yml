@@ -1,0 +1,30 @@
+# SwiftLint yapılandırması — https://github.com/realm/SwiftLint
+# Yerel: `swiftlint`   ·   CI: `swiftlint --strict` (her ihlal hatadır)
+
+# Yalnızca proje kaynaklarını lint'le (üretilen xcodeproj, .build ve
+# .claude worktree kopyaları hariç tutulur).
+included:
+  - SmokeTrackerCore/Sources
+  - SmokeTrackerCore/Tests
+  - SmokeTrackerData/Sources
+  - SmokeTrackerData/Tests
+  - SmokeTrackerApp/iOS
+  - SmokeTrackerApp/Watch
+  - SmokeTrackerApp/WatchWidget
+
+disabled_rules:
+  # Sondaki virgülü bilinçli tercih ediyoruz (daha küçük, daha temiz diff'ler).
+  - trailing_comma
+
+identifier_name:
+  # Motion/sinyal-işleme ve döngü kodunda x, y, z, t, i gibi kısa adlar idiomatiktir.
+  # Uzunluk kontrolünü gevşetiyoruz; kuralın geri kalanı (büyük/küçük harf vb.) aktif.
+  min_length:
+    warning: 1
+    error: 1
+
+line_length:
+  warning: 160
+  error: 200
+  ignores_comments: true
+  ignores_urls: true
