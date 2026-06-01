@@ -26,6 +26,7 @@ Sigara içmeyi ham hareketten tespit etmek çözülebilir bir ML problemi, ama *
 ## Özellikler
 
 - **Tek dokunuşla kayıt** — saat kadranındaki complication'a dokun, anında `+1`. İzin veya arka plan yürütme gerektirmez; her zaman çalışır.
+- **Bir bakışta içgörü** — iPhone ana ekranı bugünkü sayıyı, bu hafta ve günlük ortalama istatistiklerini, 7 günlük çubuk grafiği, haftadan haftaya trendi ve sigara‑bırakma serisi bandını gösterir. Geçmiş güne göre gruplanır; her gün için toplam ve her olay için kaynak rozeti vardır. Tüm sayılar saf, birim‑testli `StatsEngine` tarafından hesaplanır.
 - **Çevrimdışı‑güvenli senkron** — saat olayları yerelde kuyruğa alır, `WatchConnectivity` (`transferUserInfo`, garantili teslim) ile iPhone'a senkronlar. Tek doğruluk kaynağı iPhone'dur.
 - **Idempotent çift kayıt önleme** — her olay bir UUID taşır; aynı olay iki kez senkronlansa tek sayılır.
 - **Opsiyonel eğitim seansları** — Faz‑2 modelini başlatmak için, izinle açılan ivmeölçer kaydı ham hareketi `"sigara"` etiketiyle arşivler.
@@ -89,10 +90,10 @@ Watch complication ──dokunuş──▶ QuickLogManager ──▶ yerel kuyru
 
 ### Test paketlerini çalıştır (Xcode projesi gerekmez)
 
-Domain ve kalıcılık mantığı, düz SwiftPM paketleri olarak çalışan **83 test** ile kaplıdır:
+Domain ve kalıcılık mantığı, düz SwiftPM paketleri olarak çalışan **95 test** ile kaplıdır:
 
 ```bash
-# Saf domain mantığı — 47 test
+# Saf domain mantığı — 59 test
 cd SmokeTrackerCore && swift test
 
 # Kalıcılık & codec'ler — 36 test
@@ -137,7 +138,7 @@ Sigara verisi hassas sağlık bilgisidir ve öyle ele alınır:
 İncelemeciler için mühendislik sinyali:
 
 - Katı eşzamanlılıkla **Swift 6**; `Sendable` domain tipleri.
-- **Test‑öncelikli geliştirme (TDD)** — mantık önce testle yazıldı, 83 geçen test, detektör ve istatistik için deterministik saf fonksiyonlar.
+- **Test‑öncelikli geliştirme (TDD)** — mantık önce testle yazıldı, 95 geçen test, detektör ve istatistik için deterministik saf fonksiyonlar.
 - **Protokol‑odaklı bağımlılık enjeksiyonu** (`PendingCandidateStoring`, `SmokeDetecting`, …) Core'u I/O'dan uzak ve kolay mock'lanır tutar.
 - Yalnızca gelenekle değil, paket grafiğiyle **dayatılan temiz modüler sınırlar**.
 - `.xcodeproj`'in diff'leri kirletmemesi için **üretilen proje** (XcodeGen).

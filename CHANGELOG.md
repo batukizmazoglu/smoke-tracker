@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- iPhone home-screen insights: this-week and daily-average stats, a 7-day bar chart (Swift Charts), a week-over-week trend, and a smoke-free-streak banner.
+- New pure `StatsEngine` metrics: gap-filled date ranges, daily average, hourly distribution, days-since-last-event, and rolling N-day windows (12 new unit tests).
+
+### Changed
+- Redesigned the Today and History screens — card-based layout, day-grouped history with per-event source badges and proper empty states.
+
 ### Planned
 - Phase 2.2: on-device Core ML detector trained on collected sessions.
 - Localization (move in-app strings to a String Catalog).

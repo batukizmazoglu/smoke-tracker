@@ -20,6 +20,11 @@ final class PhoneModel {
 
     var todayCount: Int = 0
     var weekCount: Int = 0
+    var dailyAverage: Double = 0
+    var last7Count: Int = 0
+    var previous7Count: Int = 0
+    var daysSinceLast: Int?
+    var chartDays: [DailyCount] = []
     var history: [SmokingEvent] = []
     var trainingSessions: [TrainingSession] = []
     var trainingDataConsent: Bool {
@@ -76,8 +81,23 @@ final class PhoneModel {
 
     func refresh() {
         let all = store.allEvents()
-        todayCount = stats.count(on: Date(), events: all)
-        weekCount = stats.countInWeek(containing: Date(), events: all)
+        let now = Date()
+        let calendar = Calendar.current
+        todayCount = stats.count(on: now, events: all)
+        weekCount = stats.countInWeek(containing: now, events: all)
+        dailyAverage = stats.dailyAverage(asOf: now, events: all)
+        last7Count = stats.count(inLastDays: 7, asOf: now, events: all)
+        if let previousReference = calendar.date(byAdding: .day, value: -7, to: now) {
+            previous7Count = stats.count(inLastDays: 7, asOf: previousReference, events: all)
+        } else {
+            previous7Count = 0
+        }
+        daysSinceLast = stats.daysSinceLastEvent(asOf: now, events: all)
+        if let from = calendar.date(byAdding: .day, value: -6, to: now) {
+            chartDays = stats.dailyCounts(from: from, through: now, events: all)
+        } else {
+            chartDays = []
+        }
         history = all.sorted { $0.timestamp > $1.timestamp }
         trainingSessions = archive.allSessions().sorted { $0.recordedAt > $1.recordedAt }
     }

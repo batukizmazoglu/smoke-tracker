@@ -49,7 +49,7 @@ Three layers, strictly one‑directional dependencies: **App → Data → Core**
 ## Commands
 
 ```bash
-# Run the domain logic tests (47 tests)
+# Run the domain logic tests (59 tests)
 cd SmokeTrackerCore && swift test
 
 # Run the persistence tests (36 tests)
@@ -63,7 +63,7 @@ Toolchain: **Swift 6 / Xcode 16+**, targets **iOS 17 / watchOS 10**.
 
 ## Conventions
 
-- **Test‑driven.** Write the test first for Core/Data logic. Keep all 83 tests
+- **Test‑driven.** Write the test first for Core/Data logic. Keep all 95 tests
   green; add tests with every logic change.
 - **Conventional Commits**, scopes `core` / `data` / `watch` / `ios`
   (e.g. `feat(watch): …`, `fix(data): …`). Commit messages in this repo are
