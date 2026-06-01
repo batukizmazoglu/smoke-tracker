@@ -52,6 +52,18 @@ On every push and pull request, [GitHub Actions](.github/workflows/ci.yml) runs 
 
 Use the issue templates (Bug report / Feature request). For bugs, include the device/OS, steps to reproduce, and what you expected versus what happened.
 
+## Releases
+
+Releases are cut manually with a semantic version tag and GitHub's built-in
+release notes:
+
+```bash
+gh release create vX.Y.Z --generate-notes
+```
+
+Notes are grouped by PR label via [`.github/release.yml`](.github/release.yml).
+Update [`CHANGELOG.md`](CHANGELOG.md) in the same change.
+
 ## Code of conduct
 
 Be respectful and constructive. We follow the spirit of the [Contributor Covenant](https://www.contributor-covenant.org/).
