@@ -26,6 +26,7 @@ Detecting smoking from raw motion is a solvable ML problem, but it needs **label
 ## Features
 
 - **One‑tap logging** — tap the watch face complication, get an instant `+1`. No permissions, no background execution required; it always works.
+- **At‑a‑glance insights** — the iPhone home screen shows today's count, this‑week and daily‑average stats, a 7‑day bar chart, a week‑over‑week trend, and a smoke‑free‑streak banner. History is grouped by day with per‑day totals and a per‑event source badge. Every number is computed by the pure, unit‑tested `StatsEngine`.
 - **Offline‑safe sync** — the watch queues events locally and syncs to the iPhone over `WatchConnectivity` (`transferUserInfo`, guaranteed delivery). The iPhone is the single source of truth.
 - **Idempotent de‑duplication** — every event carries a UUID; syncing the same event twice still counts once.
 - **Optional training sessions** — opt‑in accelerometer recording that archives raw motion under a `"smoking"` label to bootstrap the Phase‑2 model.
@@ -89,10 +90,10 @@ Watch complication ──tap──▶ QuickLogManager ──▶ local queue ─�
 
 ### Run the test suites (no Xcode project needed)
 
-The domain and persistence logic is covered by **83 tests** that run as plain SwiftPM packages:
+The domain and persistence logic is covered by **95 tests** that run as plain SwiftPM packages:
 
 ```bash
-# Pure domain logic — 47 tests
+# Pure domain logic — 59 tests
 cd SmokeTrackerCore && swift test
 
 # Persistence & codecs — 36 tests
@@ -137,7 +138,7 @@ Smoking data is sensitive health information and is treated as such:
 For reviewers skimming for engineering signal:
 
 - **Swift 6** with strict concurrency; `Sendable` domain types.
-- **Test‑driven development** — logic written test‑first, 83 passing tests, deterministic pure functions for the detector and stats.
+- **Test‑driven development** — logic written test‑first, 95 passing tests, deterministic pure functions for the detector and stats.
 - **Protocol‑oriented dependency injection** (`PendingCandidateStoring`, `SmokeDetecting`, …) keeps Core free of I/O and trivially mockable.
 - **Clean modular boundaries** enforced by the package graph, not just convention.
 - **Generated project** (XcodeGen) so the `.xcodeproj` never pollutes diffs.
